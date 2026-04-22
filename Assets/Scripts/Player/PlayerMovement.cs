@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public float wallSlideSpeed = 0F;
     private bool isWallClinging = false;
 
-    // Private References
+    // --- PRIVATE REFERENCES --- //
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private bool isGrounded;
@@ -98,6 +98,15 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
+        if (moveInput.x > 0F)
+        {
+            transform.localScale = new Vector3(1F, 1F, 1F);
+        }
+        else if (moveInput.x < 0F)
+        {
+            transform.localScale = new Vector3(-1F, 1F, 1F);
+        }
+
     }
 
     private void FixedUpdate()

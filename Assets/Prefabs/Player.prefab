@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6097991288677214818}
   - component: {fileID: 8762728117199119474}
   - component: {fileID: 5013374328158534146}
+  - component: {fileID: 6312901749650758412}
   - component: {fileID: 6019183930277099078}
   m_Layer: 0
   m_Name: Player
@@ -185,12 +186,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 703aef6e7a614f24497b9608a7f4725a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEvolution
+  virtualCamera: {fileID: 0}
   currentBiomass: 0
   biomassNeeded: 3
   currentLevel: 1
+  maxLevel: 5
   speedMultiplier: 1.05
   distanceMultiplier: 1.2
   pullMultiplier: 1.15
+  baseColor: {r: 1, g: 0, b: 0, a: 1}
+  maxLevelColor: {r: 0.627451, g: 0, b: 0.3529412, a: 1}
+  baseOrthoSize: 7
+  zoomPerLevel: 0.5
+--- !u!114 &6312901749650758412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4313501586673108609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b436473acb196f4981b91bf51a86f35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FocusTime
+  slowTimeScale: 0.05
+  transitionSpeed: 5
 --- !u!120 &6019183930277099078
 LineRenderer:
   serializedVersion: 2
@@ -453,7 +474,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.19607843, g: 0, b: 0.1955223, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

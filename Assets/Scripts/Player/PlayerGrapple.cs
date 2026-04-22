@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PlayerGrapple : MonoBehaviour
@@ -14,7 +15,7 @@ public class PlayerGrapple : MonoBehaviour
     private float cooldownTimer = 0F;
     private bool isOnCooldown = false;
 
-    // Private References
+    // --- PRIVATE REFERENCES --- //
     private LineRenderer lr;
     private Rigidbody2D rb;
     private PlayerInputs controls;
@@ -116,13 +117,30 @@ public class PlayerGrapple : MonoBehaviour
         if (isGrappling && col.CompareTag("Enemy") || col.CompareTag("Orb"))
         {
             evo.GainBiomass(1);
-            Destroy(col.gameObject);          
+            Destroy(col.gameObject);
+
+            isGrappling = false;
+            lr.enabled = false;
+
+            ResetGrapple();
+            GetComponent<PlayerMovement>().ToggleMovement(true);
         }
+        else if (col.CompareTag("Bullet"))
+        {
+            Die();
+        }
+        
+    }
 
-        isGrappling = false;
-        lr.enabled = false;
+    private void Die()
+    {
+        Destroy(gameObject);
+        Debug.Log("Monster has been slain!");
+        // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
 
-        ResetGrapple();
-        GetComponent<PlayerMovement>().ToggleMovement(true);
+    public bool IsGrappleState()
+    {
+        return isGrappling;
     }
 }
