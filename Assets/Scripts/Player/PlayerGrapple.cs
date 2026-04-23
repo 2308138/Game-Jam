@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerGrapple : MonoBehaviour
 {
@@ -15,11 +17,16 @@ public class PlayerGrapple : MonoBehaviour
     private float cooldownTimer = 0F;
     private bool isOnCooldown = false;
 
+    [Header("Death Settings")]
+    public GameObject deathPrefab;
+    public GameObject enemyDeathPrefab;
+
     // --- PRIVATE REFERENCES --- //
     private LineRenderer lr;
     private Rigidbody2D rb;
     private PlayerInputs controls;
     private PlayerEvolution evo;
+    private TrailRenderer tr;
 
     private void Awake()
     {
@@ -27,6 +34,7 @@ public class PlayerGrapple : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         controls = new PlayerInputs();
         evo = GetComponent<PlayerEvolution>();
+        tr = GetComponent<TrailRenderer>();
 
         controls.Player.Grapple.started += ctx => StartGrapple();
         controls.Player.Grapple.canceled += ctx => StopGrapple();
@@ -87,6 +95,8 @@ public class PlayerGrapple : MonoBehaviour
 
     private void Update()
     {
+        if (isDead) return;
+
         if (isGrappling)
         {
             rb.linearVelocity = Vector2.zero;
@@ -110,6 +120,8 @@ public class PlayerGrapple : MonoBehaviour
                 isOnCooldown = false;
             }
         }
+
+        tr.emitting = isGrappling || GetComponent<PlayerMovement>().isDashing;
     }
 
     private void OnTriggerEnter2D (Collider2D col)
@@ -117,6 +129,11 @@ public class PlayerGrapple : MonoBehaviour
         if (isGrappling && col.CompareTag("Enemy") || col.CompareTag("Orb"))
         {
             evo.GainBiomass(1);
+            if (enemyDeathPrefab != null)
+            {
+                Instantiate(enemyDeathPrefab, col.transform.position, Quaternion.identity);        
+            }
+
             Destroy(col.gameObject);
 
             isGrappling = false;
@@ -134,9 +151,39 @@ public class PlayerGrapple : MonoBehaviour
 
     private void Die()
     {
-        Destroy(gameObject);
+        if (isDead) return;
+
+        StartCoroutine(DeathSequence());
+    }
+
+    private bool isDead = false;
+
+    private IEnumerator DeathSequence()
+    {
+        isDead = true;
         Debug.Log("Monster has been slain!");
-        // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+
+        if (deathPrefab != null)
+        {
+            Instantiate(deathPrefab, transform.position, Quaternion.identity);
+        }
+
+        Time.timeScale = 0F;
+        var impulse = GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
+        if (impulse != null)
+        {
+            impulse.GenerateImpulse(Vector3.one * 2F);
+        }
+
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.color = Color.red;
+        }
+
+        yield return new WaitForSecondsRealtime(0.5F);
+        Time.timeScale = 1F;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public bool IsGrappleState()

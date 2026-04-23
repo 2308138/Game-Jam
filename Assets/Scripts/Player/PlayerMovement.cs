@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Dash Settings")]
     public float dashSpeed = 0F;
-    private bool isDashing = false;
+    public bool isDashing = false;
     private bool canDash = true;
 
     [Header("Better Physics Settings")]
@@ -106,7 +106,6 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.localScale = new Vector3(-1F, 1F, 1F);
         }
-
     }
 
     private void FixedUpdate()
