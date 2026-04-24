@@ -2,6 +2,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Unity.Cinemachine;
 
 public class PlayerGrapple : MonoBehaviour
 {
@@ -128,6 +129,9 @@ public class PlayerGrapple : MonoBehaviour
     {
         if (isGrappling && col.CompareTag("Enemy") || col.CompareTag("Orb"))
         {
+            TriggerImpactFrame(0.7F);
+            GetComponent<CinemachineImpulseSource>().GenerateImpulse(rb.linearVelocity.normalized);
+            
             evo.GainBiomass(1);
             if (enemyDeathPrefab != null)
             {
@@ -189,5 +193,26 @@ public class PlayerGrapple : MonoBehaviour
     public bool IsGrappleState()
     {
         return isGrappling;
+    }
+
+    private bool isFrozen = false;
+
+    public void TriggerImpactFrame(float duration)
+    {
+        if (isFrozen) return;
+
+        StartCoroutine(ImpactSequence(duration));
+    }
+
+    private IEnumerator ImpactSequence(float duration)
+    {
+        isFrozen = true;
+        float preHitTimeScale = Time.timeScale;
+
+        Time.timeScale = 0F;
+
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = preHitTimeScale;
+        isFrozen = false;
     }
 }

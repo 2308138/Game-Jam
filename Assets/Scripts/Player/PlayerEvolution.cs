@@ -6,6 +6,7 @@ public class PlayerEvolution : MonoBehaviour
 {
     [Header("Public References")]
     public CinemachineCamera virtualCamera;
+    public GameObject levelUpPrefab;
 
     [Header("Player Stats Settings")]
     public int currentBiomass = 0;
@@ -70,6 +71,11 @@ public class PlayerEvolution : MonoBehaviour
 
             StartCoroutine(EvolutionDelay());
             StartCoroutine(EvolutionFlash());
+
+            if (levelUpPrefab != null)
+            {
+                Instantiate(levelUpPrefab, transform.position, Quaternion.identity);
+            }
 
             Debug.Log($"EVOLVED! Level: {currentLevel}. Speed: {movement.moveSpeed}. Reach: {grapple.maxDistance}. Grapple Speed: {grapple.pullSpeed}.");
         }

@@ -18,5 +18,10 @@ public class PlayerVisuals : MonoBehaviour
         transform.localScale = new Vector3(originalScale.x - stretch, originalScale.y + stretch, originalScale.z);
 
         transform.localScale = Vector3.Lerp(transform.localScale, originalScale, Time.deltaTime * 10F);
+
+        float tilt = rb.linearVelocity.x * -2F;
+        float targetRotation = Mathf.Clamp(tilt, -15F, 15F);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0F, 0F, targetRotation), Time.deltaTime * 10F);
     }
 }
