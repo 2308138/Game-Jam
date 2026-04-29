@@ -6,7 +6,7 @@ using System.Collections;
 public class ArenaManager : MonoBehaviour
 {
     [Header("Spawn Settings")]
-    public GameObject enemyPrefab;
+    public GameObject[] enemyPrefabs;
     public GameObject warningPrefab;
     public BoxCollider2D spawnArea;
     public float spawnInterval = 0F;
@@ -53,10 +53,11 @@ public class ArenaManager : MonoBehaviour
     {
         Vector2 spawnPos = GetRandomPointInCollider(spawnArea);
         GameObject warning = Instantiate(warningPrefab, spawnPos, Quaternion.identity);
+        int randomIndex = Random.Range(0, enemyPrefabs.Length);
 
         yield return new WaitForSeconds(warningDuration);
         Destroy(warning);
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        Instantiate(enemyPrefabs[randomIndex], spawnPos, Quaternion.identity);
     }
 
     private Vector2 GetRandomPointInCollider(BoxCollider2D col)
